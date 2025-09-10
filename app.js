@@ -1,12 +1,15 @@
-async function fetchMemes() {
+=async function fetchMemes() {
   try {
     const res = await fetch("/.netlify/functions/reddit");
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
     const posts = await res.json();
+    console.log("Fetched posts:", posts); // 🔍 Debug log
 
     const memeContainer = document.getElementById("memes");
     memeContainer.innerHTML = ""; // clear old content
 
-    if (!posts.length) {
+    if (!Array.isArray(posts) || !posts.length) {
       memeContainer.innerHTML = "<p>No memes found 😢</p>";
       return;
     }
@@ -18,7 +21,7 @@ async function fetchMemes() {
       card.innerHTML = `
         <h3>${meme.title}</h3>
         ${meme.image ? `<img src="${meme.image}" alt="${meme.title}" />` : ""}
-        <p>👍 ${meme.ups} | 💬 ${meme.comments}</p>
+        <p>👍 ${meme.ups || 0} | 💬 ${meme.comments || 0}</p>
         <a href="${meme.permalink}" target="_blank">View on Reddit</a>
       `;
 
@@ -33,4 +36,4 @@ async function fetchMemes() {
 
 // Auto load memes
 fetchMemes();
-setInterval(fetchMemes, 30000); // refresh every 30s
+setInterval(fetchMemes, 30000);
