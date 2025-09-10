@@ -23,9 +23,24 @@
 
     main {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       padding: 1rem;
+    }
+
+    #trending {
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    #trending h2 {
+      margin-top: 0;
+      color: #f39c12;
     }
 
     .meme-card {
@@ -44,6 +59,20 @@
       margin-bottom: 0.5rem;
     }
 
+    button {
+      background: #f39c12;
+      color: #000;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: #d35400;
+    }
+
     a {
       color: #1da1f2;
       text-decoration: none;
@@ -56,11 +85,15 @@
 </head>
 <body>
   <header>🚀 Trendcoin Memes</header>
-  <main id="memes">
-    <p>Loading memes...</p>
+  <main>
+    <div id="trending">
+      <h2>🔥 Trending Scoreboard</h2>
+      <p>Calculating top memes...</p>
+    </div>
+    <div id="memes">Loading memes...</div>
   </main>
 
-  <!-- Load script after DOM is parsed -->
+  <!-- Load frontend logic -->
   <script src="app.js" defer></script>
 </body>
 </html>
