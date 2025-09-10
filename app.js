@@ -3,49 +3,45 @@ async function fetchMemes() {
     const res = await fetch("/.netlify/functions/reddit");
     const posts = await res.json();
 
+    // 🎯 Trending logic: sort by momentum (ups/comments)
+    const trending = [...posts]
+      .sort((a, b) => (b.ups + b.comments) - (a.ups + a.comments))
+      .slice(0, 3);
+
+    // 🏆 Render scoreboard
+    const trendingEl = document.getElementById("trending");
+    trendingEl.innerHTML = trending
+      .map(
+        (m, i) =>
+          `<li>#${i + 1} ${m.title} <span style="color:gray">(Momentum: ${
+            m.ups + m.comments
+          })</span></li>`
+      )
+      .join("");
+
+    // 🎨 Render memes
     const memeContainer = document.getElementById("memes");
-    memeContainer.innerHTML = ""; // clear old content
+    memeContainer.innerHTML = "";
 
-    if (!posts.length) {
-      memeContainer.innerHTML = "<p>No memes found 😢</p>";
-      return;
-    }
-
-    posts.forEach(meme => {
+    posts.forEach((meme) => {
       const card = document.createElement("div");
       card.className = "meme-card";
+
+      // 🔧 Coin generator
+      const coinName = meme.title.split(" ").slice(0, 2).join(" ");
+      const ticker = "$" + coinName.replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 6);
 
       card.innerHTML = `
         <h3>${meme.title}</h3>
         ${meme.image ? `<img src="${meme.image}" alt="${meme.title}" />` : ""}
-        <p>👍 ${meme.ups} | 💬 ${meme.comments}</p>
-        <a href="${meme.permalink}" target="_blank">View on Reddit</a>
+        <p class="stats">👍 ${meme.ups} | 💬 ${meme.comments}</p>
+        <a href="${meme.permalink}" target="_blank">View on Reddit</a><br>
+        <button class="btn btn-coin" onclick="alert('💰 Suggested Coin:\\nName: ${coinName}\\nTicker: ${ticker}')">🪙 Turn into Coin</button>
+        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          `🔥 Meme: ${meme.title}\\n💰 Suggested Coin: ${ticker}\\n🚀 Built with Trendcoin Memes`
+        )}" target="_blank" class="btn btn-tweet">🐦 Tweet</a>
       `;
 
-      // Add "Turn into Coin" button
-      const button = document.createElement("button");
-      button.className = "coin-btn";
-      button.textContent = "🪙 Turn into Coin";
-
-      button.addEventListener("click", () => {
-        const coinName = meme.title.split(" ")[0];
-        const ticker = "$" + coinName.toUpperCase().slice(0, 5);
-
-        // Create or replace coin info div
-        let coinDiv = card.querySelector(".coin-info");
-        if (!coinDiv) {
-          coinDiv = document.createElement("div");
-          coinDiv.className = "coin-info";
-          card.appendChild(coinDiv);
-        }
-        coinDiv.innerHTML = `
-          <p>💰 <strong>Suggested Coin:</strong></p>
-          <p><strong>Name:</strong> ${coinName}</p>
-          <p><strong>Ticker:</strong> ${ticker}</p>
-        `;
-      });
-
-      card.appendChild(button);
       memeContainer.appendChild(card);
     });
   } catch (err) {
@@ -55,6 +51,5 @@ async function fetchMemes() {
   }
 }
 
-// Auto load memes
 fetchMemes();
 setInterval(fetchMemes, 30000); // refresh every 30s
