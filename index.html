@@ -1,19 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trendcoin Memes</title>
-    <link rel="stylesheet" href="styles.css" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-  <body class="bg-black text-white">
-    <header class="header">
-      <img src="logo.png" alt="Trendcoin Logo" class="logo"/>
-      <h1>🚀 Trendcoin Memes</h1>
-    </header>
-    <div id="root">Loading memes...</div>
-    <div id="viral-root"></div>
-    <script src="app.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🚀 Trendcoin Memes</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #111;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .meme-card {
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .meme-card img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    a {
+      color: #1da1f2;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>🚀 Trendcoin Memes</header>
+  <main id="memes">
+    <p>Loading memes...</p>
+  </main>
+
+  <!-- Load script after DOM is parsed -->
+  <script src="app.js" defer></script>
+</body>
 </html>

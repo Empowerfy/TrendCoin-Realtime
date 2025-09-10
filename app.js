@@ -1,13 +1,13 @@
 async function fetchMemes() {
   try {
+    console.log("🔄 Fetching memes...");
     const res = await fetch("/.netlify/functions/reddit");
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
     const posts = await res.json();
-    console.log("✅ Fetched posts:", posts);
+
+    console.log("✅ API Response:", posts);
 
     const memeContainer = document.getElementById("memes");
-    memeContainer.innerHTML = "";
+    memeContainer.innerHTML = ""; // clear old content
 
     if (!Array.isArray(posts) || posts.length === 0) {
       memeContainer.innerHTML = "<p>No memes found 😢</p>";
@@ -15,66 +15,32 @@ async function fetchMemes() {
     }
 
     posts.forEach(meme => {
-      if (!meme.image) return;
-
       const card = document.createElement("div");
       card.className = "meme-card";
 
+      const title = meme.title || "Untitled Meme";
+      const img = meme.image ? `<img src="${meme.image}" alt="${title}" />` : "";
+      const ups = meme.ups || 0;
+      const comments = meme.comments || 0;
+      const link = meme.permalink || "#";
+
       card.innerHTML = `
-        <h3>${meme.title}</h3>
-        <img src="${meme.image}" alt="${meme.title}" />
-        <p>👍 ${meme.ups || 0} | 💬 ${meme.comments || 0}</p>
-        <a href="${meme.permalink}" target="_blank">View on Reddit</a>
+        <h3>${title}</h3>
+        ${img}
+        <p>👍 ${ups} | 💬 ${comments}</p>
+        <a href="${link}" target="_blank">View on Reddit</a>
       `;
 
       memeContainer.appendChild(card);
     });
   } catch (err) {
-    console.error("❌ Error: Failed to fetch memes", err);
-    document.getElementById("memes").innerHTML =
-      "<p>⚠️ Failed to load memes.</p>";
-  }
-}
-
-fetchMemes();
-setInterval(fetchMemes, 30000);
-async function fetchMemes() {
-  try {
-    const res = await fetch("/.netlify/functions/reddit");
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-    const posts = await res.json();
-    console.log("✅ Fetched posts:", posts);
-
+    console.error("❌ Error fetching memes:", err);
     const memeContainer = document.getElementById("memes");
-    memeContainer.innerHTML = "";
-
-    if (!Array.isArray(posts) || posts.length === 0) {
-      memeContainer.innerHTML = "<p>No memes found 😢</p>";
-      return;
-    }
-
-    posts.forEach(meme => {
-      if (!meme.image) return;
-
-      const card = document.createElement("div");
-      card.className = "meme-card";
-
-      card.innerHTML = `
-        <h3>${meme.title}</h3>
-        <img src="${meme.image}" alt="${meme.title}" />
-        <p>👍 ${meme.ups || 0} | 💬 ${meme.comments || 0}</p>
-        <a href="${meme.permalink}" target="_blank">View on Reddit</a>
-      `;
-
-      memeContainer.appendChild(card);
-    });
-  } catch (err) {
-    console.error("❌ Error: Failed to fetch memes", err);
-    document.getElementById("memes").innerHTML =
-      "<p>⚠️ Failed to load memes.</p>";
+    memeContainer.innerHTML =
+      "<p>⚠️ Failed to load memes. Check console for details.</p>";
   }
 }
 
+// Auto load memes
 fetchMemes();
-setInterval(fetchMemes, 30000);
+setInterval(fetchMemes, 30000); // refresh every 30s
