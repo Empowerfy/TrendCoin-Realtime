@@ -11,16 +11,26 @@
       color: #e6edf3;
       margin: 0;
       padding: 0;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light {
+      background-color: #f5f5f5;
+      color: #111;
     }
     header {
       text-align: center;
       padding: 1rem;
       background-color: #161b22;
       border-bottom: 1px solid #30363d;
+      transition: background 0.3s;
+    }
+    body.light header {
+      background-color: #eaeaea;
+      border-bottom: 1px solid #ccc;
     }
     header h1 { margin: 0; font-size: 2rem; color: #58a6ff; }
-    #refresh-btn {
-      margin-top: 0.5rem;
+    #refresh-btn, #theme-toggle {
+      margin: 0.5rem;
       padding: 0.5rem 1rem;
       border: none;
       border-radius: 8px;
@@ -30,8 +40,8 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-    #refresh-btn:hover { background-color: #2ea043; }
-    #coin-list {
+    #refresh-btn:hover, #theme-toggle:hover { background-color: #2ea043; }
+    #coin-list, #leaderboard {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
@@ -46,6 +56,33 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      transition: background 0.3s, border 0.3s;
+    }
+    body.light .coin-card {
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+    /* Leaderboard rank highlights */
+    .rank-1 {
+      border: 2px solid gold;
+      background: linear-gradient(135deg, gold 0%, rgba(255,215,0,0.2) 100%);
+    }
+    .rank-2 {
+      border: 2px solid silver;
+      background: linear-gradient(135deg, silver 0%, rgba(192,192,192,0.2) 100%);
+    }
+    .rank-3 {
+      border: 2px solid #cd7f32; /* bronze */
+      background: linear-gradient(135deg, #cd7f32 0%, rgba(205,127,50,0.2) 100%);
+    }
+    body.light .rank-1 {
+      background: linear-gradient(135deg, #fff8dc 0%, #fff 100%);
+    }
+    body.light .rank-2 {
+      background: linear-gradient(135deg, #f0f0f0 0%, #fff 100%);
+    }
+    body.light .rank-3 {
+      background: linear-gradient(135deg, #fdf5e6 0%, #fff 100%);
     }
     .coin-card img {
       width: 100%;
@@ -54,8 +91,9 @@
       border-radius: 8px;
       margin: 0.5rem 0;
     }
-    .coin-card h2 { margin: 0.3rem 0; font-size: 1.2rem; }
-    .coin-card p { margin: 0.2rem 0; color: #8b949e; }
+    .coin-card h2 { margin: 0.3rem 0; font-size: 1.2rem; text-align: center; }
+    .coin-card p { margin: 0.2rem 0; color: #8b949e; text-align: center; }
+    body.light .coin-card p { color: #333; }
     button {
       margin-top: 0.3rem;
       padding: 0.4rem 0.8rem;
@@ -75,11 +113,37 @@
     <h1>🚀 Trendcoin</h1>
     <p>Discover the hottest memecoin ideas from trending memes.</p>
     <button id="refresh-btn">🔄 Refresh Now</button>
+    <button id="theme-toggle">🌙 Toggle Theme</button>
   </header>
   <main>
+    <h2 class="section-title">🏆 Top 3 Leaderboard</h2>
+    <div id="leaderboard"></div>
+
     <h2 class="section-title">🔥 New Memecoin Ideas</h2>
     <div id="coin-list"></div>
   </main>
   <script src="app.js"></script>
+  <script>
+    // Theme toggle logic
+    const body = document.body;
+    const themeBtn = document.getElementById("theme-toggle");
+
+    // Load saved theme
+    if (localStorage.getItem("theme") === "light") {
+      body.classList.add("light");
+      themeBtn.textContent = "🌙 Dark Mode";
+    }
+
+    themeBtn.addEventListener("click", () => {
+      body.classList.toggle("light");
+      if (body.classList.contains("light")) {
+        localStorage.setItem("theme", "light");
+        themeBtn.textContent = "🌙 Dark Mode";
+      } else {
+        localStorage.setItem("theme", "dark");
+        themeBtn.textContent = "☀️ Light Mode";
+      }
+    });
+  </script>
 </body>
 </html>
