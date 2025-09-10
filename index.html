@@ -28,7 +28,18 @@
       background-color: #eaeaea;
       border-bottom: 1px solid #ccc;
     }
-    header h1 { margin: 0; font-size: 2rem; color: #58a6ff; }
+    header h1 { 
+      margin: 0; 
+      font-size: 2rem; 
+      color: #58a6ff; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 10px; 
+    }
+    header h1 img {
+      height: 50px;
+    }
     #refresh-btn, #theme-toggle {
       margin: 0.5rem;
       padding: 0.5rem 1rem;
@@ -72,7 +83,7 @@
       background: linear-gradient(135deg, silver 0%, rgba(192,192,192,0.2) 100%);
     }
     .rank-3 {
-      border: 2px solid #cd7f32; /* bronze */
+      border: 2px solid #cd7f32;
       background: linear-gradient(135deg, #cd7f32 0%, rgba(205,127,50,0.2) 100%);
     }
     body.light .rank-1 {
@@ -110,7 +121,10 @@
 </head>
 <body>
   <header>
-    <h1>🚀 Trendcoin</h1>
+    <h1>
+      <img src="logo.png" alt="Trendcoin Mascot">
+      Trendcoin
+    </h1>
     <p>Discover the hottest memecoin ideas from trending memes.</p>
     <button id="refresh-btn">🔄 Refresh Now</button>
     <button id="theme-toggle">🌙 Toggle Theme</button>
@@ -128,7 +142,6 @@
     const body = document.body;
     const themeBtn = document.getElementById("theme-toggle");
 
-    // Load saved theme
     if (localStorage.getItem("theme") === "light") {
       body.classList.add("light");
       themeBtn.textContent = "🌙 Dark Mode";
