@@ -18,12 +18,22 @@
       background-color: #161b22;
       border-bottom: 1px solid #30363d;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-      color: #58a6ff;
+    header h1 { margin: 0; font-size: 2rem; color: #58a6ff; }
+    #refresh-btn {
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #238636;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
     }
-    #coin-list {
+    #refresh-btn:hover {
+      background-color: #2ea043;
+    }
+    #coin-list, #leaderboard {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1rem;
@@ -38,10 +48,6 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: transform 0.2s ease-in-out;
-    }
-    .coin-card:hover {
-      transform: scale(1.02);
     }
     .coin-card img {
       width: 100%;
@@ -50,17 +56,10 @@
       border-radius: 8px;
       margin: 0.5rem 0;
     }
-    .coin-card h2 {
-      margin: 0.3rem 0;
-      font-size: 1.2rem;
-      color: #f0f6fc;
-    }
-    .coin-card p {
-      margin: 0.2rem 0;
-      color: #8b949e;
-    }
-    .share-btn {
-      margin-top: 0.5rem;
+    .coin-card h2 { margin: 0.3rem 0; font-size: 1.2rem; }
+    .coin-card p { margin: 0.2rem 0; color: #8b949e; }
+    button {
+      margin-top: 0.3rem;
       padding: 0.4rem 0.8rem;
       border: none;
       border-radius: 6px;
@@ -68,26 +67,22 @@
       color: white;
       font-size: 0.9rem;
       cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
     }
-    .share-btn:hover {
-      background-color: #1a8cd8;
-    }
-    .error {
-      text-align: center;
-      padding: 1rem;
-      color: #f85149;
-    }
+    button:hover { background-color: #1a8cd8; }
+    h2.section-title { padding-left: 1rem; color: #58a6ff; }
   </style>
 </head>
 <body>
   <header>
     <h1>🚀 Trendcoin</h1>
     <p>Discover the hottest memes & coins trending right now.</p>
+    <button id="refresh-btn">🔄 Refresh Now</button>
   </header>
   <main>
+    <h2 class="section-title">🔥 New Coins</h2>
     <div id="coin-list"></div>
-    <div id="error-message" class="error"></div>
+    <h2 class="section-title">🏆 Leaderboard</h2>
+    <div id="leaderboard"></div>
   </main>
   <script src="app.js"></script>
 </body>
