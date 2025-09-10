@@ -1,57 +1,58 @@
-async function fetchMemes() {
+// Example API endpoint – replace with your actual meme/coin API
+const API_URL = "https://meme-api.com/gimme/5"; 
+
+async function fetchCoins() {
   try {
-    const res = await fetch("/.netlify/functions/reddit");
-    const posts = await res.json();
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("Failed to fetch trending coins/memes.");
+    const data = await res.json();
 
-    const memeContainer = document.getElementById("memes");
-    memeContainer.innerHTML = ""; // clear old content
-
-    if (!posts.length) {
-      memeContainer.innerHTML = "<p>No memes found 😢</p>";
-      return;
-    }
-
-    posts
-      .filter(meme => meme.image && meme.image.endsWith(".jpg") || meme.image.endsWith(".png"))
-      .forEach(meme => {
-        const card = document.createElement("div");
-        card.className = "meme-card";
-
-        // Generate ticker suggestion
-        const words = meme.title.split(" ");
-        const ticker = "$" + words[0].substring(0, 5).toUpperCase();
-
-        card.innerHTML = `
-          <h3>${meme.title}</h3>
-          <img src="${meme.image}" alt="${meme.title}" />
-          <p>👍 ${meme.ups} | 💬 ${meme.comments}</p>
-          <a href="${meme.permalink}" target="_blank">View on Reddit</a>
-          <div class="buttons">
-            <button class="coin-btn">🌍 Turn into Coin</button>
-            <a class="tweet-btn" 
-              href="https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `🚀 Meme: ${meme.title}\n💰 Ticker: ${ticker}\n${meme.permalink}`
-              )}" 
-              target="_blank">
-              🐦 Tweet
-            </a>
-          </div>
-        `;
-
-        // Attach coin button popup
-        card.querySelector(".coin-btn").addEventListener("click", () => {
-          alert(`💰 Suggested Coin:\nName: ${meme.title}\nTicker: ${ticker}`);
-        });
-
-        memeContainer.appendChild(card);
-      });
+    // Assume API gives array of memes; adapt if your API is different
+    displayCoins(data.memes || []);
   } catch (err) {
-    console.error("Error: Failed to fetch memes", err);
-    document.getElementById("memes").innerHTML =
-      "<p>⚠️ Failed to load memes.</p>";
+    document.getElementById("error-message").textContent = err.message;
   }
 }
 
-// Auto load memes
-fetchMemes();
-setInterval(fetchMemes, 30000); // refresh every 30s
+function displayCoins(coins) {
+  const list = document.getElementById("coin-list");
+  list.innerHTML = "";
+
+  if (coins.length === 0) {
+    document.getElementById("error-message").textContent = "No trending coins found.";
+    return;
+  }
+
+  coins.forEach((coin, index) => {
+    const card = document.createElement("div");
+    card.className = "coin-card";
+
+    const title = document.createElement("h2");
+    title.textContent = coin.title || `Coin #${index + 1}`;
+
+    const img = document.createElement("img");
+    img.src = coin.url || "https://via.placeholder.com/400x200?text=No+Image";
+    img.alt = coin.title || "Trending Meme";
+
+    const subreddit = document.createElement("p");
+    subreddit.textContent = coin.subreddit ? `Source: r/${coin.subreddit}` : "";
+
+    const shareBtn = document.createElement("button");
+    shareBtn.className = "share-btn";
+    shareBtn.textContent = "Share on Twitter";
+    shareBtn.onclick = () => {
+      const tweetText = encodeURIComponent(`${coin.title} 🚀 Check out this trending meme on #Trendcoin`);
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${tweetText}&url=${encodeURIComponent(coin.url)}`;
+      window.open(tweetUrl, "_blank");
+    };
+
+    card.appendChild(title);
+    card.appendChild(img);
+    card.appendChild(subreddit);
+    card.appendChild(shareBtn);
+    list.appendChild(card);
+  });
+}
+
+// Load on startup
+fetchCoins();
